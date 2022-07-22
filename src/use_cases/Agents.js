@@ -287,12 +287,12 @@ const fetchEventNotifications = async (token) => {
   console.log(token);
   try {
     const notifications = await axios.get(
-      `${process.env.API_URL}/configurations/event-notifications`,
+      `${process.env.API_URL}/configuration/event-notifications`,
       configAxios(token)
     );
     console.log(notifications);
     const findObj = {
-      notifications: notifications,
+      notifications: notifications.data,
     };
     return findObj;
   } catch (error) {
@@ -304,7 +304,7 @@ const fetchEventNotifications = async (token) => {
 const fetchDomainFiltering = async (token) => {
   try {
     const domains = await axios.get(
-      `${process.env.API_URL}/configurations/domains-filtering`,
+      `${process.env.API_URL}/configuration/domains-filtering`,
       configAxios(token)
     );
     const findObj = {
@@ -319,7 +319,7 @@ const fetchDomainFiltering = async (token) => {
 const fetchDeDuplicationServer = async (token) => {
   try {
     const server = await axios.get(
-      `${process.env.API_URL}/deduplication-server`,
+      `${process.env.API_URL}/deduplication-servers`,
       configAxios(token)
     );
     const findObj = {
