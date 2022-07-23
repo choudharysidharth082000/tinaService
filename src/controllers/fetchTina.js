@@ -1,5 +1,6 @@
 const axios = require("axios");
 const https = require("https");
+const moment = require("moment");
 const {
   fetchDiscoveredAgents,
   fetchHosts,
@@ -84,6 +85,54 @@ const findData = async (req, res, next) => {
     });
   }
 };
+//test controller
+const test = async (req, res, next) => {
+  try {
+    
+     //login
+     const { user, password, catalog, server } = req.body;
+     const finalObj = {
+       lang: "en",
+       user: user,
+       password: password,
+       connectReason: "adminAndSupervise",
+       catalog: catalog,
+       server: server,
+     };
+     const login = await axios.put(
+       `${process.env.API_URL}/users/authenticate`,
+       finalObj,
+       loginConfig
+     );
+     const fromDate = moment().subtract(1, "minutes").toISOString();
+     const toDate = new Date().toISOString();
+     console.log(fromDate, toDate);
+     console.log(login.data.token);
+    const Values = await Promise.all([
+      securityRules(login.data.token),
+      fetchStorages(login.data.token),
+      getStrategies(login.data.token),
+      schedules(login.data.token),
+      logs(login.data.token, fromDate, toDate),
+      pools(login.data.token),
+      rmanScripts(login.data.token),
+      operatorRequest(login.data.token),
+      notifications(login.data.token),
+      licence(login.data.token),
+      jobs(login.data.token),
+      fetchEventNotifications(login.data.token),
+      fetchDomainFiltering(login.data.token),
+      fetchDeDuplicationServer(login.data.token),
+      fetchCatalog(login.data.token),
+      BackupSelctions(login.data.token),
+      fetchArchives(login.data.token)
+    ]);
+    res.send(Values.flat());
+  } catch (error) {
+    res.send(error.message);
+  }
+}
 module.exports = {
   findData,
+  test
 };

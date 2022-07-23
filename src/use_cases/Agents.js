@@ -238,10 +238,10 @@ const notifications = async (token) => {
   }
 };
 //logs
-const logs = async (token) => {
+const logs = async (token, fromDate, toDate) => {
   try {
     const logs = await axios.get(
-      `${process.env.API_URL}/logs`,
+      `${process.env.API_URL}/logs?${fromDate}&${toDate}`,
       configAxios(token)
     );
     const findObj = {
